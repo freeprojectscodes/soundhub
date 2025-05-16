@@ -1,0 +1,84 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audio Library</title>
+  
+  <link href="/static/css/style.css" rel="stylesheet">
+  <script src="https://unpkg.com/wavesurfer.js"></script>
+
+</head>
+<body>
+    <header>
+        <h1>Audio Library</h1>
+        <input type="text" id="search" placeholder="Search or filter library...">
+    </header>
+
+    <div class="tabs">
+        <button class="tab active">Music</button>
+        <button class="tab">Sound Effects</button>
+        <button class="tab">Starred</button>
+    </div>
+
+    <main>
+        <table id="audioTable">
+            <thead>
+                <tr>
+                    <th></th> <!-- Play button -->
+                    <th></th> <!-- Star button -->
+                    <th>Track title</th>
+                    <th>Wave</th>
+                    <th>Genre</th>
+                    <th>Artist</th>
+                    <th>Duration</th>
+                    <th>Download</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for audio in page_obj  %}
+                <tr data-audio-id="{{ audio.id }}">
+                    <td data-label="Play">
+                      <button class="play-btn" data-id="{{ audio.id }}" data-src="{{ audio.audio_file.url }}">
+                        <span class="icon play-icon"></span>
+                      </button>
+                      
+                    </td>
+                    <td data-label="Star">
+                    <button class="star-btn">☆</button>
+                    </td>
+                    <td data-label="Track title"><a href="{% url 'audio_detail' audio.slug %}">{{ audio.title }}</a></td>
+                    <td data-label="Wave">
+                      <div id="waveform-{{ audio.id }}" class="waveform"></div>
+                    </td>
+                    <td data-label="Genre">{{ audio.genre|default:"Sound Effect" }}</td>
+                    <td data-label="Artist">{{ audio.artist|default:"www.Memehive.net" }}</td>
+                    <td data-label="Duration">{{ audio.formatted_duration }}</td>
+                    <td data-label="Download">
+                    <a href="{% url 'download_audio' audio.slug %}" class="download-btn">Download</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+        </table>
+        <div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="?page=1{% if tag %}&tag={{ tag }}{% endif %}">« First</a>
+    <a href="?page={{ page_obj.previous_page_number }}{% if tag %}&tag={{ tag }}{% endif %}">‹ Prev</a>
+  {% endif %}
+
+  <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% if tag %}&tag={{ tag }}{% endif %}">Next ›</a>
+    <a href="?page={{ page_obj.paginator.num_pages }}{% if tag %}&tag={{ tag }}{% endif %}">Last »</a>
+  {% endif %}
+</div>
+    </main>
+
+  
+  <script src="/static/js/script.js"></script>
+</body>
+</html>

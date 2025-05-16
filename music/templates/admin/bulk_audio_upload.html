@@ -1,0 +1,6 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+
+<h1>Bulk Upload Audio Files</h1> 
+<form method="post" enctype="multipart/form-data"> {% csrf_token %} <label for="audio_files">Select audio files:</label> <input type="file" name="audio_files" multiple required> <br><br><label for="category">Category (optional):</label>
+    {{ form.category }}<br><br> <br><br> <button type="submit">Upload</button> </form> <p><a href="..">Back to Audio List</a></p> {% endblock %}
